@@ -16,6 +16,7 @@ public class NodeEditor : EditorWindow
     static void ShowEditor()
     {
         NodeEditor editor = EditorWindow.GetWindow<NodeEditor>();
+       
     }
 
 
