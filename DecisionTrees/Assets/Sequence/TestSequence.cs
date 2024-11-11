@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TestSequence : Sequence
 {
+    public TestSequence(GameObject obj) : base(obj) { }
     public override bool decision()
     {
         var data = evaluateChildren();
@@ -25,6 +26,7 @@ public class TestSequence : Sequence
 
         foreach (var child in children)
         {
+            Debug.Log("iteration");
             if(child.decision())
             {
                 returnData.lastAccsedIndex++;

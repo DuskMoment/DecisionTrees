@@ -66,7 +66,7 @@ public class DecisionTree
         connections[from] = list;
 
     }
-    public void addConnection(TreeNode from, TreeNode to, bool isTrue = true)
+    public void addConnection(TreeNode from, TreeNode to, bool leftLeaf = true)
     {
         Assert.IsTrue(allNodes.Contains(from) && allNodes.Contains(to), "key or value not in the node collection");
         
@@ -94,7 +94,7 @@ public class DecisionTree
 
         Assert.IsTrue(newList.Count == 2, "something is fucked this should just never happen");
 
-        if(isTrue) 
+        if(leftLeaf) 
         {
             newList[0] = to;
         }

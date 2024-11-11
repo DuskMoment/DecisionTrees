@@ -18,13 +18,14 @@ public abstract class Sequence : TreeNode
         }
 
     };
-
     protected List<TreeNode> children = new List<TreeNode>();
+    protected Sequence(GameObject obj) : base(obj) { }
+
     public abstract ReturnData evaluateChildren();
 
     public void addChildren(List<TreeNode> toAdd)
     {
-        if (children.Count < 0)
+        if (children.Count <= 0)
         {
             children = toAdd;
         }
