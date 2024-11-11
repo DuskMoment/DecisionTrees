@@ -20,7 +20,7 @@ public class DecisionTree
         root = r;
         allNodes.Add(root);
     }
-    public bool generateAction()
+    public TreeNode generateAction()
     {
        
         TreeNode nodeToTry = root;
@@ -44,7 +44,8 @@ public class DecisionTree
 
             Debug.Log("Made A decision");
         }
-        return false;
+        //should return the last node in the tree
+        return nodeToTry;
     }
 
     //adds a node to the tree
@@ -71,7 +72,7 @@ public class DecisionTree
         
         if(!connections.ContainsKey(from))
         {
-            //not in the map then add it
+            //not in the map then add it (adding the from node)
             connections[from] = null;
            
         }

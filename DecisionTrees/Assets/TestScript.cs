@@ -4,23 +4,31 @@ using UnityEngine;
 
 public class TestScript : MonoBehaviour
 {
-    ShouldMocve testNode;
+    TrueAction testNode;
     DecisionTree tree;
     // Start is called before the first frame update
     void Start()
     {
-        testNode = new ShouldMocve();
+        testNode = new TrueAction();
         tree = new DecisionTree(testNode);
-        ShouldMocve testNode2 = new ShouldMocve();
-        ShouldMocve testNode3 = new ShouldMocve();
+        FalseAction false1 = new FalseAction();
+        TrueAction true1 = new TrueAction();
+        FalseAction false2 = new FalseAction();
+        FalseAction false3 = new FalseAction();
 
-        tree.addTreeNode(testNode2);
-        tree.addTreeNode(testNode3);
+        tree.addTreeNode(true1);
+        tree.addTreeNode(false1);
+        tree.addTreeNode(false2);
+        tree.addTreeNode(false3);
 
-        tree.addConnection(testNode, testNode2, true);
-        tree.addConnection(testNode, testNode3, false);
+        tree.addConnection(testNode, true1, true);
+        tree.addConnection(testNode, false3 ,false);
+        tree.addConnection(true1, false1, true);
+        tree.addConnection(true1, false2, false);
 
-        tree.generateAction();
+        var test = tree.generateAction();
+
+        Debug.Log(test);
     }
 
     // Update is called once per frame
