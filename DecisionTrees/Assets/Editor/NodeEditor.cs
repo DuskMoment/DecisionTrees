@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 //taken and modified from here https://discussions.unity.com/t/simple-node-editor/508998/2
 public class NodeEditor : EditorWindow
@@ -15,6 +16,7 @@ public class NodeEditor : EditorWindow
     //window and Id relation
     Dictionary<Rect, int> windowToIdRelation = new Dictionary<Rect, int>();
     List<int> activeIds = new List<int>();
+    Dictionary<int,int> attachMap = new Dictionary<int,int>();
 
     [MenuItem("Window/Node editor")]
     static void ShowEditor()
@@ -26,27 +28,31 @@ public class NodeEditor : EditorWindow
 
     void OnGUI()
     {
-        //if (windowsToAttach.Count == 2)
-        //{
-        //    attachedWindows.Add(windowsToAttach[0]);
-        //    attachedWindows.Add(windowsToAttach[1]);
-        //    windowsToAttach = new List<int>();
-        //}
+        if (windowsToAttach.Count == 2)
+        {
+            attachedWindows.Add(windowsToAttach[0]);
+            attachedWindows.Add(windowsToAttach[1]);
 
-        //if(windowsToDetach.Count == 2)
-        //{
-        //    attachedWindows.Remove(windowsToDetach[0]);
-        //    attachedWindows.Remove(windowsToDetach[1]);
-        //    windowsToDetach = new List<int>();
-        //}
+            //used for deleting
+            attachMap[windowsToAttach[0]] = windowsToAttach[1];
+            attachMap[windowsToAttach[1]] = windowsToAttach[0];
+            windowsToAttach = new List<int>();
+        }
 
-        //if (attachedWindows.Count >= 2)
-        //{
-        //    for (int i = 0; i < attachedWindows.Count; i += 2)
-        //    {
-        //        DrawNodeCurve(windows[attachedWindows[i]], windows[attachedWindows[i + 1]]);
-        //    }
-        //}
+        if (windowsToDetach.Count == 2)
+        {
+            attachedWindows.Remove(windowsToDetach[0]);
+            attachedWindows.Remove(windowsToDetach[1]);
+            windowsToDetach = new List<int>();
+        }
+
+        if (attachedWindows.Count >= 2)
+        {
+            for (int i = 0; i < attachedWindows.Count; i += 2)
+            {
+                DrawNodeCurve(findWindowFromId(attachedWindows[i]), findWindowFromId(attachedWindows[i+1]));
+            }
+        }
 
         //using a window add the connections to a map
 
@@ -116,6 +122,7 @@ public class NodeEditor : EditorWindow
     {
         if (GUILayout.Button("Attach"))
         {
+            Debug.Log("id to attach" +  id);
             windowsToAttach.Add(id);
         }
         if (GUILayout.Button("Detatch"))
@@ -125,9 +132,10 @@ public class NodeEditor : EditorWindow
         }
         if(GUILayout.Button("delete"))
         {
+            //add deleting to nodes
             //windowsToDetach.Add(id);
             //nodesToDelete.Add(id);
-
+            windowsToDetach.Add(id);
             deleteWindow(id);
 
         }
@@ -191,11 +199,37 @@ public class NodeEditor : EditorWindow
             }
 
         }
+        
+        if(attachMap.ContainsKey(id)) 
+        {
+            attachedWindows.Remove(id);
+            attachedWindows.Remove(attachMap[id]);
+            attachMap.Remove(id);
+        }
+       
 
         //remove it form the winow list
         windows.Remove(key);
         //remove it from the map
         windowToIdRelation.Remove(key);
 
+    }
+
+    Rect findWindowFromId(int id)
+    {
+        var keys = windowToIdRelation.Keys;
+
+        foreach(var key in keys) 
+        {
+            if (windowToIdRelation[key] ==  id)
+            {
+                //found the right window return the key
+                return key;
+            }
+        }
+
+        //bad id return a null rect
+
+        return Rect.zero;
     }
 }
