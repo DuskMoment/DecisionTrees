@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.CodeEditor;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class TestScript : MonoBehaviour
 {
     TrueAction testNode;
     DecisionTree tree;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +41,9 @@ public class TestScript : MonoBehaviour
         tree.addConnection(sequence, true1, true);
         tree.addConnection(true1, false1, true);
         tree.addConnection(true1, false2, false);
+
+        
+
 
         var test = tree.generateAction();
 

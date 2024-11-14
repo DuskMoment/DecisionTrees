@@ -2,8 +2,13 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using TreeEditor;
+using static DecisionTree;
 
+//use the asset to save and serialize custom data use yaml?
+// use this for https://discussions.unity.com/t/calling-an-editor-window-from-a-monobehavior-script/703197/2 work around for testing
 //taken and modified from here https://discussions.unity.com/t/simple-node-editor/508998/2
+// usful for yaml decoding https://stackoverflow.com/questions/25650113/how-to-parse-a-yaml-string-in-c-sharp
 public class NodeEditor : EditorWindow
 {
     //contains a list of all active windows
@@ -58,38 +63,8 @@ public class NodeEditor : EditorWindow
 
         BeginWindows();
 
-        if (GUILayout.Button("Create Node"))
-        {
-            Debug.Log("creating a new node");
-            //create rect
-            windows.Add(new Rect(10, 10, 100, 100));
-          
-            //take that last Id and add one
-            int id  = generateNewId(); //calls a sort might be expensive
-                                     
-            //this ensures uniqe keys
-            //last window
-           
-            if(windows.Count >= 2) 
-            {
-
-                var rect = windows[windows.Count - 2];
-                rect.x++;
-                windows[windows.Count - 1] = rect;
-            }
-           
-            //add to map
-            windowToIdRelation[windows[windows.Count - 1]] = id;
-
-            //var keys = windowToIdRelation.Keys;
-
-            //Debug.Log("KeyCount " + keys.Count.ToString());
-            //foreach (var key in keys)
-            //{
-            //    Debug.Log("key " + key.ToString());
-            // }
-
-        }
+        //create nodes
+        createNode();
 
        
         for (int i = 0; i < windows.Count; i++)
@@ -116,6 +91,42 @@ public class NodeEditor : EditorWindow
 
         EndWindows();
     }
+    private Rect createNode(bool isManual = false)
+    {
+        if (GUILayout.Button("Create Node") || isManual)
+        {
+            Debug.Log("creating a new node");
+            //create rect
+            windows.Add(new Rect(10, 10, 100, 100));
+
+            //take that last Id and add one
+            int id = generateNewId(); //calls a sort might be expensive
+
+            //this ensures uniqe keys
+            //last window
+
+            if (windows.Count >= 2)
+            {
+
+                var rect = windows[windows.Count - 2];
+                rect.x++;
+                windows[windows.Count - 1] = rect;
+            }
+
+            //add to map
+            windowToIdRelation[windows[windows.Count - 1]] = id;
+
+            //var keys = windowToIdRelation.Keys;
+
+            //Debug.Log("KeyCount " + keys.Count.ToString());
+            //foreach (var key in keys)
+            //{
+            //    Debug.Log("key " + key.ToString());
+            // }
+            return windows[0];
+        }
+        return Rect.zero;
+    }
 
 
     void DrawNodeWindow(int id)
@@ -123,11 +134,12 @@ public class NodeEditor : EditorWindow
         if (GUILayout.Button("Attach"))
         {
             Debug.Log("id to attach" +  id);
-            windowsToAttach.Add(id);
+            attatch(id);
         }
         if (GUILayout.Button("Detatch"))
         { 
-            windowsToDetach.Add(id);
+            //windowsToDetach.Add(id);
+            detatch(id);
             
         }
         if(GUILayout.Button("delete"))
@@ -135,15 +147,28 @@ public class NodeEditor : EditorWindow
             //add deleting to nodes
             //windowsToDetach.Add(id);
             //nodesToDelete.Add(id);
-            windowsToDetach.Add(id);
-            deleteWindow(id);
-
+           // windowsToDetach.Add(id);
+            //deleteWindow(id);
+            deleteNode(id);
         }
 
 
         GUI.DragWindow();
     }
 
+    private void attatch(int id)
+    {
+        windowsToAttach.Add(id);
+    }
+    private void detatch(int id)
+    {
+        windowsToDetach.Add(id);
+    }
+    private void deleteNode(int id)
+    {
+        windowsToDetach.Add(id);
+        deleteWindow(id);
+    }
 
     void DrawNodeCurve(Rect start, Rect end)
     {
@@ -231,5 +256,54 @@ public class NodeEditor : EditorWindow
         //bad id return a null rect
 
         return Rect.zero;
+    }
+
+    //this function generates a graph from tree data
+    public void generateGraph(DTreeData tree)
+    {
+        Dictionary<TreeNode, Rect> nodeToWindow = new Dictionary<TreeNode, Rect>();
+        DTreeData data = tree;
+
+        //place root node in the map
+        Rect baseNode = createNode(true);
+        TreeNode rootTreeNode = tree.root;
+
+        nodeToWindow[rootTreeNode] = baseNode;
+
+        var nodes = data.allNodes;
+
+        foreach(var node in nodes)
+        {
+            Rect window = createNode(true);
+            TreeNode treeNode = node;
+
+            nodeToWindow[node] = window;
+        }
+
+        //at this point we should have a relation between the nodes and windows
+        //next step is to add the connections 
+        var keys = data.connections.Keys;
+
+        foreach (var key in keys)
+        {
+            var children = data.connections[key];
+            //lol map in a map its so over for me 
+            int id;
+            if (children[0] != null)
+            {
+                id = windowToIdRelation[nodeToWindow[children[0]]];
+                attatch(id);
+            }
+            if (children[1] != null)
+            {
+                id = windowToIdRelation[nodeToWindow[children[1]]];
+                attatch(id);
+
+            }
+
+
+
+        }
+       
     }
 }

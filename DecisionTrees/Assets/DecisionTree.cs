@@ -4,6 +4,8 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+
+
 public class DecisionTree
 {
 
@@ -14,6 +16,14 @@ public class DecisionTree
 
     //keep track of all connections this could be a action to prefrom/sequence/another decision
     private Dictionary<TreeNode, List<TreeNode>> connections = new Dictionary<TreeNode, List<TreeNode>>();
+
+    public struct DTreeData
+    {
+
+        public Dictionary<TreeNode, List<TreeNode>> connections;
+        public TreeNode root;
+        public List<TreeNode> allNodes;
+    }
 
     public DecisionTree(TreeNode r)
     {
@@ -121,5 +131,13 @@ public class DecisionTree
 
         removeAllConnections(node);
     }
-    
+
+   public DTreeData getTreeData()
+   {
+        DTreeData data = new DTreeData();
+        data.allNodes = allNodes;
+        data.root = root;
+        data.connections = connections;
+        return data;
+   }
 }
