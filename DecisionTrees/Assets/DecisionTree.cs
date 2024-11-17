@@ -5,9 +5,67 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 
+//this needs to be serializable ie no dictinarys 
+[System.Serializable]
+public struct DTreeData
+{
+    //convert this to a list or somthing :3 i want to die but it will be so cool if this saving works
+    //public Dictionary<TreeNode, List<TreeNode>> connections;
+    public TreeNode root;
+    public List<TreeNode> allNodes;
+
+    public List<List<TreeNode>> connectionBranch;
+    public List<TreeNode> connectionRoot;
+
+    //conversion is incorrect you need to account for duplicate keys and values (i.e other layers of the tree)
+    public void connectionsAsSer(Dictionary<TreeNode, List<TreeNode>> connections)
+    {
+        if(connectionBranch == null) 
+        {
+            connectionBranch = new();
+        }
+        if(connectionRoot == null) 
+        {
+            connectionRoot = new();
+        }
+
+        var keys = connections.Keys;
+
+        //think about adding null connections
+        foreach (var key in keys) 
+        {
+            connectionRoot.Add(key);
+
+            if(connections.ContainsKey(key))
+            {
+                connectionBranch.Add(connections[key]);
+            }
+           
+
+        }
+        
+    }
+    //return as a dictionary of Dictionary<TreeNode, List<TreeNode>>
+
+    //rebuild the Dictonary
+    public Dictionary<TreeNode, List<TreeNode>> returnDictionary()
+    {
+        Dictionary<TreeNode,List<TreeNode>> dict = new Dictionary<TreeNode, List<TreeNode>>();
+
+        int counter = 0;
+        foreach(var connection in connectionRoot)
+        {
+            dict[connection] = connectionBranch[0];
+            counter++;
+        }
+
+        return dict;
+    }
+
+}
 
 public class DecisionTree
-{
+{ 
 
     //keep track of the root node
     private TreeNode root;
@@ -17,18 +75,13 @@ public class DecisionTree
     //keep track of all connections this could be a action to prefrom/sequence/another decision
     private Dictionary<TreeNode, List<TreeNode>> connections = new Dictionary<TreeNode, List<TreeNode>>();
 
-    public struct DTreeData
-    {
-
-        public Dictionary<TreeNode, List<TreeNode>> connections;
-        public TreeNode root;
-        public List<TreeNode> allNodes;
-    }
+   
 
     public DecisionTree(TreeNode r)
     {
         root = r;
         allNodes.Add(root);
+
     }
     public TreeNode generateAction()
     {
@@ -137,7 +190,8 @@ public class DecisionTree
         DTreeData data = new DTreeData();
         data.allNodes = allNodes;
         data.root = root;
-        data.connections = connections;
+        data.connectionsAsSer(connections);
         return data;
    }
+
 }

@@ -19,6 +19,7 @@ public class TestScript : MonoBehaviour
         TrueAction true1 = new TrueAction(this.gameObject);
         FalseAction false2 = new FalseAction(this.gameObject);
         FalseAction false3 = new FalseAction(this.gameObject);
+        FalseAction false4 = new FalseAction(this.gameObject);
         TestSequence sequence = new TestSequence(this.gameObject);
 
         List<TreeNode> actions = new List<TreeNode>();
@@ -35,10 +36,12 @@ public class TestScript : MonoBehaviour
         tree.addTreeNode(false2);
         tree.addTreeNode(false3);
         tree.addTreeNode(sequence);
+        tree.addTreeNode(false4);
 
         tree.addConnection(testNode, sequence, true);
         tree.addConnection(testNode, false3 ,false);
         tree.addConnection(sequence, true1, true);
+        tree.addConnection(sequence, false4, false);
         tree.addConnection(true1, false1, true);
         tree.addConnection(true1, false2, false);
 
@@ -51,12 +54,26 @@ public class TestScript : MonoBehaviour
 
         //var type = test.GetType();
         //this.AddComponent<TrueAction>();
-        
+        SaveLoadManager m = new SaveLoadManager();
+
+        m.save(tree.getTreeData(), "Data");
+
+        var dat = m.load("Data");
+
+        var dict = dat.returnDictionary();
+
+        Debug.Log(dat);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+    public void testFunction()
+    {
+        //blah
+        Debug.Log("Ran function");
+
     }
 }

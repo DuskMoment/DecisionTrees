@@ -30,18 +30,31 @@ public class NodeEditor : EditorWindow
        
     }
 
+    void attatchWindows()
+    {
+
+        attachedWindows.Add(windowsToAttach[0]);
+        attachedWindows.Add(windowsToAttach[1]);
+
+        //used for deleting
+        attachMap[windowsToAttach[0]] = windowsToAttach[1];
+        attachMap[windowsToAttach[1]] = windowsToAttach[0];
+        windowsToAttach = new List<int>();
+    }
+
+    void makeCurve()
+    {
+        for (int i = 0; i < attachedWindows.Count; i += 2)
+        {
+            DrawNodeCurve(findWindowFromId(attachedWindows[i]), findWindowFromId(attachedWindows[i + 1]));
+        }
+    }
 
     void OnGUI()
     {
         if (windowsToAttach.Count == 2)
         {
-            attachedWindows.Add(windowsToAttach[0]);
-            attachedWindows.Add(windowsToAttach[1]);
-
-            //used for deleting
-            attachMap[windowsToAttach[0]] = windowsToAttach[1];
-            attachMap[windowsToAttach[1]] = windowsToAttach[0];
-            windowsToAttach = new List<int>();
+            attatchWindows();
         }
 
         if (windowsToDetach.Count == 2)
@@ -53,10 +66,7 @@ public class NodeEditor : EditorWindow
 
         if (attachedWindows.Count >= 2)
         {
-            for (int i = 0; i < attachedWindows.Count; i += 2)
-            {
-                DrawNodeCurve(findWindowFromId(attachedWindows[i]), findWindowFromId(attachedWindows[i+1]));
-            }
+            makeCurve();
         }
 
         //using a window add the connections to a map
@@ -123,7 +133,16 @@ public class NodeEditor : EditorWindow
             //{
             //    Debug.Log("key " + key.ToString());
             // }
-            return windows[0];
+            return windows[windows.Count - 1];
+        }
+        if (GUILayout.Button("load from file"))
+        {
+            SaveLoadManager m = new SaveLoadManager();
+
+            DTreeData dat = m.load("Data");
+
+            generateGraph(dat);
+
         }
         return Rect.zero;
     }
@@ -258,7 +277,7 @@ public class NodeEditor : EditorWindow
         return Rect.zero;
     }
 
-    //this function generates a graph from tree data
+    //this function generates a graph from tree data this fucks up connections
     public void generateGraph(DTreeData tree)
     {
         Dictionary<TreeNode, Rect> nodeToWindow = new Dictionary<TreeNode, Rect>();
@@ -282,11 +301,12 @@ public class NodeEditor : EditorWindow
 
         //at this point we should have a relation between the nodes and windows
         //next step is to add the connections 
-        var keys = data.connections.Keys;
+        var dict = data.returnDictionary();
+        var keys = dict.Keys;
 
         foreach (var key in keys)
         {
-            var children = data.connections[key];
+            var children = dict[key];
             //lol map in a map its so over for me 
             int id;
             if (children[0] != null)
@@ -300,6 +320,8 @@ public class NodeEditor : EditorWindow
                 attatch(id);
 
             }
+            attatchWindows();
+            makeCurve();
 
 
 

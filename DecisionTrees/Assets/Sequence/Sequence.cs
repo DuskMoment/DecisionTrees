@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using UnityEngine;
 
+[System.Serializable]
 public abstract class Sequence : TreeNode
 {
 
