@@ -83,6 +83,12 @@ public class DecisionTree
         allNodes.Add(root);
 
     }
+    public DecisionTree(TreeNode r, List<TreeNode> nodes)
+    {
+        root = r;
+        allNodes.Add(root);
+        allNodes = nodes;
+    }
     public TreeNode generateAction()
     {
        
@@ -165,6 +171,50 @@ public class DecisionTree
         {
             newList[1] = to;
         }
+
+        connections[from] = newList;
+
+    }
+    public void addConnection(TreeNode from, TreeNode left, TreeNode right)
+    {
+        Assert.IsTrue(allNodes.Contains(from), "key not in the node collection");
+
+        if (left != null)
+        {
+            Assert.IsTrue(allNodes.Contains(left), "Left not in the node collection");
+        }
+        else if (right != null)
+        {
+            Assert.IsTrue(allNodes.Contains(right), "Right not in the node collection");
+        }
+            
+
+        if (!connections.ContainsKey(from))
+        {
+            //not in the map then add it (adding the from node)
+            connections[from] = null;
+
+        }
+
+        //get prev connection
+        List<TreeNode> newList = connections[from];
+
+        //if the node has no connections then add it
+        if (newList == null)
+        {
+            Debug.Log("List was Null");
+            newList = new List<TreeNode>();
+
+            //pad list for only two choises (think about using arrays?)
+
+            newList.Insert(0, null);
+            newList.Insert(1, null);
+        }
+
+        Assert.IsTrue(newList.Count == 2, "something is fucked this should just never happen");
+
+        newList[0] = left;
+        newList[1] = right;
 
         connections[from] = newList;
 
