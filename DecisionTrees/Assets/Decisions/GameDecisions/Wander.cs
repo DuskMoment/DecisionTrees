@@ -15,9 +15,15 @@ public class Wander : TreeNode
 
         Assert.IsNotNull(wander);
 
+        //if we where not prev wandering set the wandering to zero to not have build up of things
+        if(wander.getWanderState() != true)
+        {
+            wander.setWanderMovment(Vector2.zero);
+        }
         //set the player to wander
         wander.setWandering(true);
-       
-        return !wander.isOutOfEnergy();
+
+        //remember to fix this
+        return true; //!wander.isOutOfEnergy();
     }
 }
