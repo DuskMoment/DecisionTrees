@@ -18,6 +18,7 @@ public class NearFruit : TreeNode
         //check to see if we are near somthing
         if(check.getIsTriggering())
         {
+            
             //rememvber to set wanding to false
             var wander = mGameObject.GetComponent<WanderFunction>(); //.setWandering(false);
             
@@ -49,8 +50,8 @@ public class NearFruit : TreeNode
             //    //stop moving 
             //    mov.velocity = Vector2.zero;
             //}
-            
 
+            Debug.Log("Moving toward object " + check.getCollision().name);
             return true;
         }
         else 

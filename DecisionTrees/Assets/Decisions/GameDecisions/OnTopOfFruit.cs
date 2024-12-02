@@ -12,9 +12,12 @@ public class OnTopOfFruit : TreeNode
     {
 
         var mov = mGameObject.GetComponent<Rigidbody2D>();
+        var pos = mGameObject.GetComponent<CheckForTriggering>().getCollision().gameObject.transform.position;
+        Debug.Log("doing ontop of fuit");
 
-        if(mov.position.magnitude < 0.5f)
+        if(Mathf.Pow((mov.position - (Vector2)pos).magnitude,2) < 0.25f)
         {
+            Debug.Log("stopping in on top of the object");
             //on top of fruit
             mov.velocity = Vector3.zero;
             return true;

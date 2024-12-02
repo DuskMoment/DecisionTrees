@@ -7,7 +7,7 @@ public class WanderFunction : MonoBehaviour
     [SerializeField] int startEnergy;
     private bool isWandering = false;
     [SerializeField] int decayRate = 1;
-    [SerializeField] float timer = 1;
+    [SerializeField] float timer = 4;
     float timeLeft = 0;
 
     Rigidbody2D mov = null;
@@ -66,6 +66,7 @@ public class WanderFunction : MonoBehaviour
     }
     public void increaseEnergy()
     {
+        Debug.Log("energyIncreased");
         startEnergy++;
     }
 

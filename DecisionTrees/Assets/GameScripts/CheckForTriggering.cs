@@ -7,30 +7,26 @@ public class CheckForTriggering : MonoBehaviour
     private bool triggered;
     private Collider2D col;
 
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("hit somthing");
         triggered = true;
         col = collision;
 
     }
-    private void OnTriggerExit2D(Collider2D collision)
+    public void OnTriggerExit2D(Collider2D collision)
     {
 
         Debug.Log("left hiting somthing");
         triggered = false;
         col = collision;
+        //chache size then make it big a again this will hope fully reset game
+
+        this.GetComponent<Collider2D>().enabled = false;
+        this.GetComponent<Collider2D>().enabled = true;
+
+
     }
     public bool getIsTriggering()
     {
