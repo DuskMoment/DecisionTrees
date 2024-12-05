@@ -16,6 +16,7 @@ public struct DTreeData
 
     public List<List<TreeNode>> connectionBranch;
     public List<TreeNode> connectionRoot;
+    public Dictionary<TreeNode, List<TreeNode>> connectionDic;
 
     //conversion is incorrect you need to account for duplicate keys and values (i.e other layers of the tree)
     public void connectionsAsSer(Dictionary<TreeNode, List<TreeNode>> connections)
@@ -241,6 +242,7 @@ public class DecisionTree
         data.allNodes = allNodes;
         data.root = root;
         data.connectionsAsSer(connections);
+        data.connectionDic = connections;
         return data;
    }
 
