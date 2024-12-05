@@ -6,6 +6,7 @@ public class OnTopOfFruit : TreeNode
 {
     Rigidbody2D mov;
     CheckForTriggering trigger;
+    public GameObject lockedObj;
     public OnTopOfFruit(GameObject go) : base(go)
     {
         mov = mGameObject.GetComponent<Rigidbody2D>();
@@ -15,8 +16,20 @@ public class OnTopOfFruit : TreeNode
     public override bool decision()
     {
 
+        //issue with this code fix :3
         //var mov = mGameObject.GetComponent<Rigidbody2D>();
         var pos = trigger.getCollision().gameObject.transform.position;
+        if (lockedObj != null)
+        {
+
+            pos = lockedObj.gameObject.transform.position;
+            
+        }
+        else
+        {
+            lockedObj = trigger.getCollision().gameObject;
+        }
+        
         Debug.Log("doing ontop of fuit");
 
         if(Mathf.Pow((mov.position - (Vector2)pos).magnitude,2) < 0.25f)

@@ -6,11 +6,15 @@ using UnityEngine.Assertions;
 public class NearFruit : TreeNode
 {
     CheckForTriggering check = null;
+    Collider2D colData;
+    bool hasTarget = false;
+    Vector3 lockVec;
+    GameObject lockedObject;
     public NearFruit(GameObject obj) : base(obj) 
     {
     
         check = mGameObject.GetComponent<CheckForTriggering>();
-
+        //col = mGameObject.GetComponent<Collider2D>();   
         Assert.IsNotNull(check);
     }
     public override bool decision()
@@ -30,16 +34,36 @@ public class NearFruit : TreeNode
             }
             
 
-
-
             var mov =  mGameObject.GetComponent<Rigidbody2D>();
 
             //our pos minus the fruit
 
+            //we dont hava  currenct target the the object we where locked on to is inactive
+            /* if(lockedObject == null || (hasTarget == false && lockedObject.activeSelf == false))
+             {
+                 Debug.LogWarning(" got a new target");
+                 //store the first colision
+                 lockVec = check.getCollision().gameObject.transform.position;
+                 lockedObject = check.getCollision().gameObject;
+             }*/
+
+
             var fruitPos = check.getCollision().gameObject.transform.position;
             Vector2 movVec = fruitPos - mGameObject.transform.position;
+            //if the object is still alive then use it
+            if (lockedObject != null) 
+            {
+                Debug.LogWarning("used locked object");
+                fruitPos = lockedObject.gameObject.transform.position;
+                movVec = fruitPos - mGameObject.transform.position;
+            }
+            else
+            {
+                lockedObject = check.getCollision().gameObject;
+            }
+            
 
-            mov.AddForce(movVec.normalized);
+            mov.velocity = movVec.normalized;
             //maybe add this to a diffrent decsion like is ontop of thing
             //if (movVec.magnitude > 0.5f)
             //{
@@ -56,6 +80,7 @@ public class NearFruit : TreeNode
         }
         else 
         {
+            hasTarget = false;
             return false; 
         }
 
