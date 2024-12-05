@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class OnTopOfFruit : TreeNode
 {
+    Rigidbody2D mov;
+    CheckForTriggering trigger;
     public OnTopOfFruit(GameObject go) : base(go)
     {
+        mov = mGameObject.GetComponent<Rigidbody2D>();
+        trigger = mGameObject.GetComponent<CheckForTriggering>();
 
     }
     public override bool decision()
     {
 
-        var mov = mGameObject.GetComponent<Rigidbody2D>();
-        var pos = mGameObject.GetComponent<CheckForTriggering>().getCollision().gameObject.transform.position;
+        //var mov = mGameObject.GetComponent<Rigidbody2D>();
+        var pos = trigger.getCollision().gameObject.transform.position;
         Debug.Log("doing ontop of fuit");
 
         if(Mathf.Pow((mov.position - (Vector2)pos).magnitude,2) < 0.25f)

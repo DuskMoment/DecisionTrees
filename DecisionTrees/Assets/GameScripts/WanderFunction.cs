@@ -9,6 +9,7 @@ public class WanderFunction : MonoBehaviour
     [SerializeField] int decayRate = 1;
     [SerializeField] float timer = 4;
     float timeLeft = 0;
+    Vector2 wanderDirection = Vector2.zero;
 
     Rigidbody2D mov = null;
     // Start is called before the first frame update
@@ -37,6 +38,7 @@ public class WanderFunction : MonoBehaviour
         else
         {
             timeLeft = timer;
+            wanderDirection = getRandDirection();
         }
         
         
@@ -57,12 +59,17 @@ public class WanderFunction : MonoBehaviour
     {
         if (startEnergy < 0)
         {
+            Debug.Log("Out of endergy");
             return true;
         }
         else
         {
             return false;
         }
+    }
+    public int getCurrentEnergy()
+    {
+        return startEnergy; 
     }
     public void increaseEnergy()
     {
@@ -73,7 +80,7 @@ public class WanderFunction : MonoBehaviour
     private void wanderMovemnt()
     {
         
-        mov.AddForce(getRandDirection().normalized);
+        mov.velocity = wanderDirection.normalized;
 
     }
     public void setWanderMovment(Vector2 vec)

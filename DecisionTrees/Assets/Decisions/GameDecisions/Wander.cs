@@ -5,13 +5,14 @@ using UnityEngine.Assertions;
 
 public class Wander : TreeNode
 {
+    WanderFunction wander;
    public Wander(GameObject obj) : base(obj)
     {
-
+        wander = mGameObject.transform.GetComponent<WanderFunction>();
     }
     public override bool decision()
     {
-        WanderFunction wander = mGameObject.GetComponent<WanderFunction>();
+        //WanderFunction wander = mGameObject.GetComponent<WanderFunction>();
 
         Assert.IsNotNull(wander);
 
@@ -23,6 +24,12 @@ public class Wander : TreeNode
         //set the player to wander
         wander.setWandering(true);
 
+        if(wander.isOutOfEnergy()) 
+        {
+            //retrun false to die
+            Debug.Log("Out of endergy");
+            return false;
+        }
         //remember to fix this
         return true; //!wander.isOutOfEnergy();
     }

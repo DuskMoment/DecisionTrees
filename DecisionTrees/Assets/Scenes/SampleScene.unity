@@ -435,6 +435,7 @@ GameObject:
   - component: {fileID: 327137954}
   - component: {fileID: 327137955}
   - component: {fileID: 327137956}
+  - component: {fileID: 327137957}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -641,6 +642,18 @@ MonoBehaviour:
   startEnergy: 10
   decayRate: 1
   timer: 4
+--- !u!114 &327137957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327137946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e923b05eda2e80b4aa1f8e385b10f155, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &400027686
 GameObject:
   m_ObjectHideFlags: 0
