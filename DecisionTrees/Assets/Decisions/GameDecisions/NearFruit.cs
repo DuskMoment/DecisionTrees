@@ -53,7 +53,7 @@ public class NearFruit : TreeNode
             //if the object is still alive then use it
             if (lockedObject != null) 
             {
-                Debug.LogWarning("used locked object");
+                //Debug.LogWarning("used locked object");
                 fruitPos = lockedObject.gameObject.transform.position;
                 movVec = fruitPos - mGameObject.transform.position;
             }
