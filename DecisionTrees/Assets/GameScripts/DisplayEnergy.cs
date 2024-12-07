@@ -16,7 +16,16 @@ public class DisplayEnergy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        text.text = wander.getCurrentEnergy().ToString();
+        if (wander.getCurrentEnergy() >= 0)
+        {
+            text.text = wander.getCurrentEnergy().ToString();
+        }
+        else
+        {
+            text.text = "You have Died :(";
+        }
+        
+
         
     }
 }
